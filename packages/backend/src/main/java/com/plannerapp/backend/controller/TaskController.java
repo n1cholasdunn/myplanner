@@ -21,6 +21,9 @@ public class TaskController {
 
     @PostMapping
     public Task createTask(@RequestBody Task task) {
+        if (task.getCategory() == null){
+            task.setCategory(Task.Category.DAILY);
+        }
         return taskRepository.save(task);
     }
     @PutMapping("/{id}")
