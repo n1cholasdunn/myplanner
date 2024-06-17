@@ -36,11 +36,11 @@ const WeekView: React.FC = () => {
     <div className="grid grid-cols-3 gap-4 p-4 lg:grid-cols-7">
       {days.map((day: Day) => (
         <div key={day} className="bg-gray-200 p-4">
-          <h3 className="font-bold">{day}</h3>
+          <h3 className="text-center font-bold">{day}</h3>
           <ul>
             {(events[day] || []).map((event: string, index: number) => (
               <li key={index} className="mt-2">
-                {event}
+                - {event}
               </li>
             ))}
           </ul>
