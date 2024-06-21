@@ -1,19 +1,7 @@
 import React from "react";
+import { Day, Events } from "../types/calendar";
 
 // Define the days of the week as a type
-type Day =
-  | "Sunday"
-  | "Monday"
-  | "Tuesday"
-  | "Wednesday"
-  | "Thursday"
-  | "Friday"
-  | "Saturday";
-
-// Define the events object type
-type Events = {
-  [key in Day]?: string[];
-};
 
 const WeekView: React.FC = () => {
   const days: Day[] = [
