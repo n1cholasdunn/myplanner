@@ -3,7 +3,7 @@ import Button from "./components/Button";
 import DayView from "./components/DayView";
 import WeekView from "./components/WeekView";
 import { Category, Priority } from "./types/tasks";
-import { useTasks } from "./hooks/tasks";
+import { useTasks } from "./hooks/useTasks";
 import DayBox from "./components/DayBox";
 
 function App() {

@@ -29,7 +29,7 @@ const DayBox = ({ day, events }: DayBoxProps) => {
     category: "DAILY" as Category,
     priority: "HIGH" as Priority,
   };
-
+  //TODO: make svg icons hoverable
   return (
     <div className="flex-col space-y-3">
       <div className="flex justify-between">
