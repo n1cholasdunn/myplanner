@@ -18,7 +18,10 @@ public class TaskController {
     public List<Task> getTasks() {
         return taskRepository.findAll();
     }
-
+@GetMapping("/{id}")
+public Task getTask(@PathVariable Long id){
+        return taskRepository.findById(id).orElseThrow(()-> new RuntimeException("Task not found"));
+}
     @PostMapping
     public Task createTask(@RequestBody Task task) {
         if (task.getCategory() == null){

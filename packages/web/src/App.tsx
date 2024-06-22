@@ -28,7 +28,7 @@ function App() {
         text="Complete a task"
         onClick={() => updateTask(3, { ...task, completed: true })}
       />
-      <DayBox />
+      <DayBox day="Sunday" events={[]} />
       <WeekView />
     </>
   );

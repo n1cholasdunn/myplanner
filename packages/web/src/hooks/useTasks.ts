@@ -4,6 +4,7 @@ type UseTasksReturn = {
   getTasks: () => Promise<Task[]>;
   getTask: (id: number) => Promise<Task>;
   updateTask: (id: number, task: TaskInput) => Promise<Task>;
+  completeTask: (id: number, task: TaskInput) => Promise<Task>;
   deleteTask: (id: number) => Promise<void>;
 };
 
@@ -97,6 +98,28 @@ export const useTasks = (): UseTasksReturn => {
       throw error;
     }
   };
+  const completeTask = async (id: number, task: TaskInput): Promise<Task> => {
+    try {
+      const response = await fetch(`http://localhost:8080/tasks/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(task),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Task completed:", data);
+      return data;
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      throw error;
+    }
+  };
 
   const deleteTask = async (id: number): Promise<void> => {
     try {
@@ -122,6 +145,7 @@ export const useTasks = (): UseTasksReturn => {
     getTasks,
     getTask,
     updateTask,
+    completeTask,
     deleteTask,
   };
 };
