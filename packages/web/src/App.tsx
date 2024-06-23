@@ -5,17 +5,24 @@ import WeekView from "./components/WeekView";
 import { Category, Priority } from "./types/tasks";
 import { useTasks } from "./hooks/useTasks";
 import DayBox from "./components/DayBox";
+import TaskForm from "./components/TaskForm";
+import { TaskInput } from "./schema";
 
 function App() {
   const { createTask, getTask, getTasks, updateTask, deleteTask } = useTasks();
   const task = {
     title: "the title",
     notes: "the notes",
-    dueDate: new Date("2024-06-18"),
+    dueDate: "2024-06-18",
     completed: false,
     category: "DAILY" as Category,
     priority: "HIGH" as Priority,
   };
+  const handleTaskSubmit = (data: TaskInput) => {
+    createTask(data);
+    console.log("New Task:", data);
+  };
+
   return (
     <>
       <h1 className=" text-red-600">Planner for my adhd</h1>
@@ -28,7 +35,9 @@ function App() {
         text="Complete a task"
         onClick={() => updateTask(3, { ...task, completed: true })}
       />
+
       <DayBox day="Sunday" events={[]} />
+      <TaskForm onSubmit={handleTaskSubmit} />
       <WeekView />
     </>
   );

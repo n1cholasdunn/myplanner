@@ -1,4 +1,5 @@
-import { TaskInput, Task } from "../types/tasks";
+import { Task } from "../types/tasks";
+import { TaskInput } from "../schema";
 type UseTasksReturn = {
   createTask: (task: TaskInput) => Promise<Task>;
   getTasks: () => Promise<Task[]>;
