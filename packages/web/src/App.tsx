@@ -4,12 +4,11 @@ import DayView from "./components/DayView";
 import WeekView from "./components/WeekView";
 import { Category, Priority } from "./types/tasks";
 import { useTasks } from "./hooks/useTasks";
-import DayBox from "./components/DayBox";
 import TaskForm from "./components/TaskForm";
 import { TaskInput } from "./schema";
 
 function App() {
-  const { createTask, getTask, getTasks, updateTask, deleteTask } = useTasks();
+  const { tasks, addTask, updateTask, removeTask } = useTasks();
   const task = {
     title: "the title",
     notes: "the notes",
@@ -19,7 +18,7 @@ function App() {
     priority: "HIGH" as Priority,
   };
   const handleTaskSubmit = (data: TaskInput) => {
-    createTask(data);
+    addTask(data);
     console.log("New Task:", data);
   };
 
@@ -27,16 +26,20 @@ function App() {
     <>
       <h1 className=" text-red-600">Planner for my adhd</h1>
       <DayView />
-      <Button text="Add a task" onClick={() => createTask(task)} />
-      <Button text="Delete a task" onClick={() => deleteTask(1)} />
-      <Button text="get a task" onClick={() => getTask(2)} />
-      <Button text="get all tasks" onClick={() => getTasks()} />
+      <Button text="Add a task" onClick={() => addTask(task)} />
+      <Button text="Delete a task" onClick={() => removeTask(1)} />
+      <Button
+        text="get a task"
+        onClick={() => console.log(tasks?.find((task) => task.id === 1))}
+      />
+      <Button text="get all tasks" onClick={() => console.log(tasks)} />
       <Button
         text="Complete a task"
-        onClick={() => updateTask(3, { ...task, completed: true })}
+        onClick={() =>
+          updateTask({ id: 3, data: { ...task, completed: true } })
+        }
       />
 
-      <DayBox day="Sunday" events={[]} />
       <TaskForm onSubmit={handleTaskSubmit} />
       <WeekView />
     </>

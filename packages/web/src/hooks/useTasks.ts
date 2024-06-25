@@ -1,152 +1,133 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Task } from "../types/tasks";
 import { TaskInput } from "../schema";
-type UseTasksReturn = {
-  createTask: (task: TaskInput) => Promise<Task>;
-  getTasks: () => Promise<Task[]>;
-  getTask: (id: number) => Promise<Task>;
-  updateTask: (id: number, task: TaskInput) => Promise<Task>;
-  completeTask: (id: number, task: TaskInput) => Promise<Task>;
-  deleteTask: (id: number) => Promise<void>;
+
+const fetchTasks = async (): Promise<Task[]> => {
+  const response = await fetch("http://localhost:8080/tasks", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
 };
 
-export const useTasks = (): UseTasksReturn => {
-  const createTask = async (task: TaskInput): Promise<Task> => {
-    try {
-      const response = await fetch("http://localhost:8080/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(task),
-      });
+const fetchTask = async (id: number): Promise<Task> => {
+  const response = await fetch(`http://localhost:8080/tasks/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
 
-      const data = await response.json();
-      console.log("Task created:", data);
-      return data;
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      throw error;
-    }
-  };
+  return response.json();
+};
 
-  const getTasks = async (): Promise<Task[]> => {
-    try {
-      const response = await fetch("http://localhost:8080/tasks", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+const createTask = async (task: TaskInput): Promise<Task> => {
+  const response = await fetch("http://localhost:8080/tasks", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(task),
+  });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
 
-      const data = await response.json();
-      console.log("Tasks retrieved:", data);
-      return data;
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      throw error;
-    }
-  };
+  return response.json();
+};
 
-  const getTask = async (id: number): Promise<Task> => {
-    try {
-      const response = await fetch(`http://localhost:8080/tasks/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+const updateTask = async (id: number, task: TaskInput): Promise<Task> => {
+  const response = await fetch(`http://localhost:8080/tasks/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(task),
+  });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
 
-      const data = await response.json();
-      console.log("Task retrieved:", data);
-      return data;
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      throw error;
-    }
-  };
+  return response.json();
+};
 
-  const updateTask = async (id: number, task: TaskInput): Promise<Task> => {
-    try {
-      const response = await fetch(`http://localhost:8080/tasks/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(task),
-      });
+const deleteTask = async (id: number): Promise<void> => {
+  const response = await fetch(`http://localhost:8080/tasks/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+};
 
-      const data = await response.json();
-      console.log("Task updated:", data);
-      return data;
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      throw error;
-    }
-  };
-  const completeTask = async (id: number, task: TaskInput): Promise<Task> => {
-    try {
-      const response = await fetch(`http://localhost:8080/tasks/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(task),
-      });
+export const useTasks = () => {
+  const queryClient = useQueryClient();
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  const {
+    data: tasks,
+    error: tasksError,
+    isLoading: tasksLoading,
+  } = useQuery<Task[], Error>({
+    queryKey: ["tasks"],
+    queryFn: fetchTasks,
+  });
 
-      const data = await response.json();
-      console.log("Task completed:", data);
-      return data;
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      throw error;
-    }
-  };
+  const addTaskMutation = useMutation<Task, Error, TaskInput>({
+    mutationFn: createTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
 
-  const deleteTask = async (id: number): Promise<void> => {
-    try {
-      const response = await fetch(`http://localhost:8080/tasks/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+  const updateTaskMutation = useMutation<
+    Task,
+    Error,
+    { id: number; data: TaskInput }
+  >({
+    mutationFn: ({ id, data }) => updateTask(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  const removeTaskMutation = useMutation<void, Error, number>({
+    mutationFn: deleteTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
 
-      console.log("Task deleted");
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      throw error;
-    }
-  };
+  const getTaskQuery = (id: number) =>
+    useQuery<Task, Error>({
+      queryKey: ["task", id],
+      queryFn: () => fetchTask(id),
+      enabled: !!id,
+    });
+
   return {
-    createTask,
-    getTasks,
-    getTask,
-    updateTask,
-    completeTask,
-    deleteTask,
+    tasks,
+    tasksError,
+    tasksLoading,
+    getTaskQuery,
+    addTask: addTaskMutation.mutate,
+    updateTask: updateTaskMutation.mutate,
+    removeTask: removeTaskMutation.mutate,
   };
 };
