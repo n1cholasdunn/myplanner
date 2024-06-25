@@ -1,62 +1,15 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import {
-  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
 import { useEffect, useRef } from "react";
-
-const days = [
-  { date: "2021-12-27" },
-  { date: "2021-12-28" },
-  { date: "2021-12-29" },
-  { date: "2021-12-30" },
-  { date: "2021-12-31" },
-  { date: "2022-01-01", isCurrentMonth: true },
-  { date: "2022-01-02", isCurrentMonth: true },
-  { date: "2022-01-03", isCurrentMonth: true },
-  { date: "2022-01-04", isCurrentMonth: true },
-  { date: "2022-01-05", isCurrentMonth: true },
-  { date: "2022-01-06", isCurrentMonth: true },
-  { date: "2022-01-07", isCurrentMonth: true },
-  { date: "2022-01-08", isCurrentMonth: true },
-  { date: "2022-01-09", isCurrentMonth: true },
-  { date: "2022-01-10", isCurrentMonth: true },
-  { date: "2022-01-11", isCurrentMonth: true },
-  { date: "2022-01-12", isCurrentMonth: true },
-  { date: "2022-01-13", isCurrentMonth: true },
-  { date: "2022-01-14", isCurrentMonth: true },
-  { date: "2022-01-15", isCurrentMonth: true },
-  { date: "2022-01-16", isCurrentMonth: true },
-  { date: "2022-01-17", isCurrentMonth: true },
-  { date: "2022-01-18", isCurrentMonth: true },
-  { date: "2022-01-19", isCurrentMonth: true },
-  { date: "2022-01-20", isCurrentMonth: true, isToday: true },
-  { date: "2022-01-21", isCurrentMonth: true },
-  { date: "2022-01-22", isCurrentMonth: true, isSelected: true },
-  { date: "2022-01-23", isCurrentMonth: true },
-  { date: "2022-01-24", isCurrentMonth: true },
-  { date: "2022-01-25", isCurrentMonth: true },
-  { date: "2022-01-26", isCurrentMonth: true },
-  { date: "2022-01-27", isCurrentMonth: true },
-  { date: "2022-01-28", isCurrentMonth: true },
-  { date: "2022-01-29", isCurrentMonth: true },
-  { date: "2022-01-30", isCurrentMonth: true },
-  { date: "2022-01-31", isCurrentMonth: true },
-  { date: "2022-02-01" },
-  { date: "2022-02-02" },
-  { date: "2022-02-03" },
-  { date: "2022-02-04" },
-  { date: "2022-02-05" },
-  { date: "2022-02-06" },
-];
-
-function classNames(
-  ...classes: (string | undefined | boolean | null)[]
-): string {
-  return classes.filter(Boolean).join(" ");
-}
+import MiniCalendar from "./MiniCalendar";
+import ViewMenu from "./ViewMenu";
+import { classNames } from "../utils/classNames";
+import { useTasks } from "../hooks/useTasks";
+import TaskList from "./TaskList";
 
 export default function DayView() {
   const container = useRef<HTMLDivElement | null>(null);
@@ -76,6 +29,7 @@ export default function DayView() {
     }
   }, []);
 
+  const { tasks } = useTasks();
   return (
     <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-200 px-6 py-4">
@@ -115,84 +69,13 @@ export default function DayView() {
             </button>
           </div>
           <div className="hidden md:ml-4 md:flex md:items-center">
-            <Menu as="div" className="relative">
-              <MenuButton
-                type="button"
-                className="flex items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              >
-                Day view
-                <ChevronDownIcon
-                  className="-mr-1 h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-              </MenuButton>
-
-              <MenuItems
-                transition
-                className="absolute right-0 z-10 mt-3 w-36 origin-top-right overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-              >
-                <div className="py-1">
-                  <MenuItem>
-                    {({ focus }) => (
-                      <a
-                        href="#"
-                        className={classNames(
-                          focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          "block px-4 py-2 text-sm",
-                        )}
-                      >
-                        Day view
-                      </a>
-                    )}
-                  </MenuItem>
-                  <MenuItem>
-                    {({ focus }) => (
-                      <a
-                        href="#"
-                        className={classNames(
-                          focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          "block px-4 py-2 text-sm",
-                        )}
-                      >
-                        Week view
-                      </a>
-                    )}
-                  </MenuItem>
-                  <MenuItem>
-                    {({ focus }) => (
-                      <a
-                        href="#"
-                        className={classNames(
-                          focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          "block px-4 py-2 text-sm",
-                        )}
-                      >
-                        Month view
-                      </a>
-                    )}
-                  </MenuItem>
-                  <MenuItem>
-                    {({ focus }) => (
-                      <a
-                        href="#"
-                        className={classNames(
-                          focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          "block px-4 py-2 text-sm",
-                        )}
-                      >
-                        Year view
-                      </a>
-                    )}
-                  </MenuItem>
-                </div>
-              </MenuItems>
-            </Menu>
+            <ViewMenu />
             <div className="ml-6 h-6 w-px bg-gray-300" />
             <button
               type="button"
               className="ml-6 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Add event
+              Add Task
             </button>
           </div>
           <Menu as="div" className="relative ml-6 md:hidden">
@@ -231,60 +114,6 @@ export default function DayView() {
                       )}
                     >
                       Go to today
-                    </a>
-                  )}
-                </MenuItem>
-              </div>
-              <div className="py-1">
-                <MenuItem>
-                  {({ focus }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block px-4 py-2 text-sm",
-                      )}
-                    >
-                      Day view
-                    </a>
-                  )}
-                </MenuItem>
-                <MenuItem>
-                  {({ focus }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block px-4 py-2 text-sm",
-                      )}
-                    >
-                      Week view
-                    </a>
-                  )}
-                </MenuItem>
-                <MenuItem>
-                  {({ focus }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block px-4 py-2 text-sm",
-                      )}
-                    >
-                      Month view
-                    </a>
-                  )}
-                </MenuItem>
-                <MenuItem>
-                  {({ focus }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block px-4 py-2 text-sm",
-                      )}
-                    >
-                      Year view
                     </a>
                   )}
                 </MenuItem>
@@ -364,76 +193,9 @@ export default function DayView() {
               </span>
             </button>
           </div>
-          <div className="flex w-full flex-auto">
-            {/*TODO:put events in grid here and figure out sorting by date created and then allow drag and sort*/}
-          </div>
+          <TaskList tasks={tasks} />
         </div>
-        <div className="hidden w-1/2 max-w-md flex-none border-l border-gray-100 px-8 py-10 md:block">
-          <div className="flex items-center text-center text-gray-900">
-            <button
-              type="button"
-              className="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-            >
-              <span className="sr-only">Previous month</span>
-              <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-            <div className="flex-auto text-sm font-semibold">January 2022</div>
-            <button
-              type="button"
-              className="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-            >
-              <span className="sr-only">Next month</span>
-              <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="mt-6 grid grid-cols-7 text-center text-xs leading-6 text-gray-500">
-            <div>M</div>
-            <div>T</div>
-            <div>W</div>
-            <div>T</div>
-            <div>F</div>
-            <div>S</div>
-            <div>S</div>
-          </div>
-          <div className="isolate mt-2 grid grid-cols-7 gap-px rounded-lg bg-gray-200 text-sm shadow ring-1 ring-gray-200">
-            {days.map((day, dayIdx) => (
-              <button
-                key={day.date}
-                type="button"
-                className={classNames(
-                  "py-1.5 hover:bg-gray-100 focus:z-10",
-                  day.isCurrentMonth ? "bg-white" : "bg-gray-50",
-                  (day.isSelected || day.isToday) && "font-semibold",
-                  day.isSelected && "text-white",
-                  !day.isSelected &&
-                    day.isCurrentMonth &&
-                    !day.isToday &&
-                    "text-gray-900",
-                  !day.isSelected &&
-                    !day.isCurrentMonth &&
-                    !day.isToday &&
-                    "text-gray-400",
-                  day.isToday && !day.isSelected && "text-indigo-600",
-                  dayIdx === 0 && "rounded-tl-lg",
-                  dayIdx === 6 && "rounded-tr-lg",
-                  dayIdx === days.length - 7 && "rounded-bl-lg",
-                  dayIdx === days.length - 1 && "rounded-br-lg",
-                )}
-              >
-                <time
-                  dateTime={day.date}
-                  className={classNames(
-                    "mx-auto flex h-7 w-7 items-center justify-center rounded-full",
-                    day.isSelected && day.isToday && "bg-indigo-600",
-                    day.isSelected && !day.isToday && "bg-gray-900",
-                  )}
-                >
-                  {day.date.split("-").pop()?.replace(/^0/, "") ?? ""}
-                </time>
-              </button>
-            ))}
-          </div>
-        </div>
+        <MiniCalendar />
       </div>
     </div>
   );
