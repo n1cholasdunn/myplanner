@@ -1,11 +1,12 @@
 /// <reference types="vite-plugin-svgr/client" />
 import Button from "./components/Button";
-import DayView from "./components/DayView";
+import DayView from "./pages/DayView";
 import WeekView from "./components/WeekView";
 import { Category, Priority } from "./types/tasks";
 import { useTasks } from "./hooks/useTasks";
 import TaskForm from "./components/TaskForm";
 import { TaskInput } from "./schema";
+import AppRouter from "./Router";
 
 function App() {
   const { tasks, addTask, updateTask, removeTask } = useTasks();
@@ -24,7 +25,13 @@ function App() {
 
   return (
     <>
-      <h1 className=" text-red-600">Planner for my adhd</h1>
+      <AppRouter />
+    </>
+  );
+}
+
+export default App;
+/*      <h1 className=" text-red-600">Planner for my adhd</h1>
       <DayView />
       <Button text="Add a task" onClick={() => addTask(task)} />
       <Button text="Delete a task" onClick={() => removeTask(1)} />
@@ -42,8 +49,4 @@ function App() {
 
       <TaskForm onSubmit={handleTaskSubmit} />
       <WeekView />
-    </>
-  );
-}
-
-export default App;
+ */

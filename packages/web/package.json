@@ -14,9 +14,11 @@
     "@heroicons/react": "^2.1.4",
     "@hookform/resolvers": "^3.6.0",
     "@tanstack/react-query": "^5.45.1",
+    "dayjs": "^1.11.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.52.0",
+    "react-router-dom": "^6.24.0",
     "tailwind": "^4.0.0",
     "zod": "^3.23.8"
   },

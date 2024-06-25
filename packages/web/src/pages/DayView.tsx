@@ -5,11 +5,11 @@ import {
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
 import { useEffect, useRef } from "react";
-import MiniCalendar from "./MiniCalendar";
-import ViewMenu from "./ViewMenu";
+import MiniCalendar from "../components/MiniCalendar";
+import ViewMenu from "../components/ViewMenu";
 import { classNames } from "../utils/classNames";
 import { useTasks } from "../hooks/useTasks";
-import TaskList from "./TaskList";
+import TaskList from "../components/TaskList";
 
 export default function DayView() {
   const container = useRef<HTMLDivElement | null>(null);
