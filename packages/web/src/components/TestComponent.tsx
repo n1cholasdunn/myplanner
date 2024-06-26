@@ -10,7 +10,7 @@ interface MiniCalendarProps {
   onMonthChange: (month: Dayjs) => void;
 }
 
-const MiniCalendar: React.FC<MiniCalendarProps> = ({
+const TestComponent: React.FC<MiniCalendarProps> = ({
   currentMonth,
   selectedDate,
   onDateSelect,
@@ -106,4 +106,4 @@ const MiniCalendar: React.FC<MiniCalendarProps> = ({
   );
 };
 
-export default MiniCalendar;
+export default TestComponent;
