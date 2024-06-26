@@ -51,8 +51,7 @@ export const getWeekDays = (
 ) => {
   const startOfWeek = selectedDate.startOf("week");
   const endOfWeek = selectedDate.endOf("week");
-  const days: { date: string; isCurrentMonth: boolean; isToday: boolean }[] =
-    [];
+  const days = [];
   let date = startOfWeek;
 
   while (date.isBefore(endOfWeek, "day") || date.isSame(endOfWeek, "day")) {
@@ -60,6 +59,7 @@ export const getWeekDays = (
       date: date.format("YYYY-MM-DD"),
       isCurrentMonth: date.isSame(currentMonth, "month"),
       isToday: date.isSame(dayjs(), "day"),
+      isSelected: false,
     });
     date = date.add(1, "day");
   }

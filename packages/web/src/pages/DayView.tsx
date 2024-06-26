@@ -12,6 +12,7 @@ import TaskList from "../components/TaskList";
 import dayjs, { Dayjs } from "dayjs";
 import { getWeekDays } from "../utils/calendar";
 import { Category, Priority } from "../types/tasks";
+import { classNames } from "../utils/classNames";
 
 const DayView: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
@@ -34,10 +35,20 @@ const DayView: React.FC = () => {
   }, []);
 
   const { tasks, addTask } = useTasks();
+
+  const filteredTasks = tasks?.filter((task) =>
+    dayjs(task.dueDate).isSame(selectedDate, "day"),
+  );
+
+  useEffect(() => {
+    console.log("filteredTasks", filteredTasks);
+    console.log("tasks", tasks);
+  }, [filteredTasks, tasks]);
+
   const task = {
     title: "the title",
     notes: "the notes",
-    dueDate: "2024-06-18",
+    dueDate: "2024-06-26",
     completed: false,
     category: "DAILY" as Category,
     priority: "HIGH" as Priority,
@@ -161,18 +172,31 @@ const DayView: React.FC = () => {
               <button
                 key={idx}
                 type="button"
-                className="flex flex-col items-center pb-1.5 pt-3"
+                className={classNames(
+                  "flex flex-col items-center pb-1.5 pt-3 text-gray-900  hover:bg-gray-100",
+                  selectedDate.isSame(day.date, "day") && " font-semibold",
+                )}
                 onClick={() => handleDateSelect(dayjs(day.date))}
               >
                 <span>{dayjs(day.date).format("dd")[0]}</span>
                 <span className="mt-3 flex h-8 w-8 items-center justify-center rounded-full text-base font-semibold text-gray-900">
-                  {day.date.split("-").pop()?.replace(/^0/, "")}
+                  <time
+                    dateTime={day.date}
+                    className={classNames(
+                      "mx-auto flex h-7 w-7 items-center justify-center rounded-full",
+                      selectedDate.isSame(day.date, "day") &&
+                        "bg-red-600 text-white",
+                      day.isSelected && day.isToday && "bg-indigo-600",
+                      day.isSelected && !day.isToday && "bg-gray-900",
+                    )}
+                  >
+                    {day.date.split("-").pop()?.replace(/^0/, "")}
+                  </time>
                 </span>
               </button>
             ))}
           </div>
-          {/*TODO: filter tasks by currentselected date*/}
-          <TaskList tasks={tasks} />
+          <TaskList tasks={filteredTasks} />
         </div>
         <MiniCalendar
           currentMonth={currentMonth}
