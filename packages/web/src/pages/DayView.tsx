@@ -13,6 +13,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { getWeekDays } from "../utils/calendar";
 import { Category, Priority } from "../types/tasks";
 import { classNames } from "../utils/classNames";
+import Avatar from "../components/Avatar";
 
 const DayView: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
@@ -125,6 +126,8 @@ const DayView: React.FC = () => {
             >
               Add Task
             </button>
+            <div className="ml-6 h-6 w-px bg-gray-300" />
+            <Avatar />
           </div>
           <Menu as="div" className="relative ml-6 md:hidden">
             <MenuButton className="-mx-2 flex items-center rounded-full border border-transparent p-2 text-gray-400 hover:text-gray-500">

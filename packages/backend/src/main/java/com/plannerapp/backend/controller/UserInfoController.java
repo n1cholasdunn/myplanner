@@ -19,7 +19,8 @@ public class UserInfoController {
         return Map.of(
                 "id", principal.getSubject(),
                 "name", principal.getFullName(),
-                "email", principal.getEmail()
+                "email", principal.getEmail(),
+                "picture", principal.getPicture()
         );
     }
 }

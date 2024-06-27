@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { User } from "src/types/user";
 
 const fetchUser = async () => {
   const response = await fetch("/api/user", {
@@ -18,12 +19,19 @@ const fetchUser = async () => {
   return response.json();
 };
 
-export const useUser = () => {
+export const useUser = (): {
+  user: User | undefined;
+  error: Error | null;
+  isLoading: boolean;
+} => {
   const {
     data: user,
     error,
     isLoading,
-  } = useQuery({ queryKey: ["user"], queryFn: fetchUser });
+  }: UseQueryResult<User | null, Error> = useQuery<User | null, Error>({
+    queryKey: ["user"],
+    queryFn: fetchUser,
+  });
   console.log("user", user);
   return { user: user ?? undefined, error, isLoading };
 };
