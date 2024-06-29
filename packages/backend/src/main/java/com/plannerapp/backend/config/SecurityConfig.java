@@ -1,6 +1,5 @@
 package com.plannerapp.backend.config;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -27,6 +26,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -38,8 +38,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // Disable CSRF for now
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/tasks/**").permitAll() // Allow access to /tasks for testing
                         .requestMatchers("/api/user").permitAll()
+                        .requestMatchers("/login/**", "/oauth2/**","/api/oauth2/callback").permitAll()
+                        .requestMatchers("/tasks/**").authenticated() // Allow access to /tasks for testing
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2->oauth2
@@ -51,8 +52,10 @@ public class SecurityConfig {
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
-                .formLogin(Customizer.withDefaults())  // Disable form login
-                .httpBasic(AbstractHttpConfigurer::disable)  // Disable HTTP Basic auth
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                //.formLogin(Customizer.withDefaults())  // Disable form login
+               // .httpBasic(AbstractHttpConfigurer::disable)  // Disable HTTP Basic auth
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin // Allow frames from same origin
                         )
@@ -62,9 +65,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(List.of("*"));
 
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

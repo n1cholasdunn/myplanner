@@ -1,11 +1,7 @@
 package com.plannerapp.backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.util.Date;
 import java.time.LocalDate;
 
@@ -28,6 +24,10 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public enum Priority {
         LOW,
@@ -97,5 +97,13 @@ public class Task {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

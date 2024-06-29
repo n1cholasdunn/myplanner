@@ -13,4 +13,5 @@ export interface TaskInput {
 
 export interface Task extends TaskInput {
   id: number;
+  user_id: number;
 }

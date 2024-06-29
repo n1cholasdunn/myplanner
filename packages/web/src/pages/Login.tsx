@@ -1,3 +1,6 @@
+import React from "react";
+import LoginButton from "../components/LoginButton";
+
 const Login = () => {
   const handleLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/google";
@@ -9,6 +12,7 @@ const Login = () => {
       <button onClick={handleLogin} className="login-button">
         Login with Google
       </button>
+      <LoginButton />
     </div>
   );
 };
