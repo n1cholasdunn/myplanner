@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.plannerapp.backend.model.User;
 import com.plannerapp.backend.repository.UserRepository;
+import com.plannerapp.backend.service.PublicKeyService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,26 +33,32 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    @Autowired
+    private PublicKeyService publicKeyService;
 
     @PostMapping("/callback")
     public ResponseEntity<?> handleOAuth2Callback(@RequestBody Map<String, String> payload) {
         String token = payload.get("token");
         logger.info("Received token: {}", token);
-        System.out.println("Received token: " + token);
-        System.out.println("""
-                !!!!
-                !!!!
-                !!!!!
-                !!!!
-                !!!!
-                !!!!!
-                """);
         try {
-            // Verify and decode the JWT token
-            Algorithm algorithm = Algorithm.HMAC256(jwtSecret);
-            DecodedJWT jwt = JWT.require(algorithm).build().verify(token);
+            // Decode the JWT without verification to extract the 'kid' and 'exp'
+            DecodedJWT jwt = JWT.decode(token);
+            String kid = jwt.getKeyId();
+            long exp = jwt.getClaim("exp").asLong();
+            long currentTime = System.currentTimeMillis() / 1000; // Convert to seconds
+            if (currentTime > exp) {
+                return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Token has expired");
+            }
+
+            // Get the public key using the 'kid'
+            RSAPublicKey publicKey = publicKeyService.getPublicKey(kid);
+            if (publicKey == null) {
+                return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Invalid token");
+            }
+
+            // Verify the JWT using the public key
+            Algorithm algorithm = Algorithm.RSA256(publicKey, null);
+            JWT.require(algorithm).build().verify(token);
 
             String email = jwt.getClaim("email").asString();
             String username = jwt.getClaim("name").asString();
@@ -73,6 +81,10 @@ public class AuthController {
             }
 
             // Set the user authentication context
+           // UserDetails userDetails = org.springframework.security.core.userdetails.User.withUsername(user.getUsername()).password("").authorities("ROLE_USER").build();
+           // Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+           // SecurityContextHolder.getContext().setAuthentication(authentication);
+// Set the user authentication context
             UserDetails userDetails = org.springframework.security.core.userdetails.User.withUsername(user.getUsername()).password("").authorities("ROLE_USER").build();
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

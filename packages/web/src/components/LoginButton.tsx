@@ -22,7 +22,7 @@ const LoginButton = () => {
           return response.json();
         })
         .then((data) => {
-          console.log("HELLO");
+          localStorage.setItem("token", token);
           console.log("User info from backend:", data);
         })
         .catch((error) => console.error("Error:", error));
