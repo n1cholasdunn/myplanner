@@ -1,9 +1,9 @@
 package com.plannerapp.backend.controller;
 
-import com.plannerapp.backend.model.Task;
-import com.plannerapp.backend.model.User;
+import com.plannerapp.backend.entity.Task;
+import com.plannerapp.backend.entity.UserEntity;
 import com.plannerapp.backend.repository.TaskRepository;
-import com.plannerapp.backend.repository.UserRepository;
+import com.plannerapp.backend.repository.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,7 +23,7 @@ public class TaskController {
     private TaskRepository taskRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserEntityRepository userEntityRepository;
 
     @GetMapping
     public ResponseEntity<List<Task>> getAllTasks(Authentication authentication) {
