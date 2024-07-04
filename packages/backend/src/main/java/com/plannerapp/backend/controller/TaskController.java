@@ -32,13 +32,13 @@ public class TaskController {
             return ResponseEntity.status(401).build();
         }
 
-        User user = getUserFromAuthentication(authentication);
+        UserEntity user = getUserFromAuthentication(authentication);
         if (user == null) {
             logger.warning("User not found for authentication: " + authentication.getName());
             return ResponseEntity.status(401).build();
         }
 
-        List<Task> tasks = taskRepository.findByUserId(user.getId());
+        List<Task> tasks = taskRepository.findByUserEmail(user.getEmail());
         return ResponseEntity.ok(tasks);
     }
 
@@ -49,7 +49,7 @@ public class TaskController {
             return ResponseEntity.status(401).build();
         }
 
-        User user = getUserFromAuthentication(authentication);
+        UserEntity user = getUserFromAuthentication(authentication);
         if (user == null) {
             logger.warning("User not found for authentication: " + authentication.getName());
             return ResponseEntity.status(401).build();
@@ -67,13 +67,13 @@ public class TaskController {
             return ResponseEntity.status(401).build();
         }
 
-        User user = getUserFromAuthentication(authentication);
+        UserEntity user = getUserFromAuthentication(authentication);
         if (user == null) {
             logger.warning("User not found for authentication: " + authentication.getName());
             return ResponseEntity.status(401).build();
         }
 
-        Optional<Task> task = taskRepository.findByIdAndUserId(id, user.getId());
+        Optional<Task> task = taskRepository.findByIdAndUserEmail(id, user.getEmail());
         return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -84,13 +84,13 @@ public class TaskController {
             return ResponseEntity.status(401).build();
         }
 
-        User user = getUserFromAuthentication(authentication);
+        UserEntity user = getUserFromAuthentication(authentication);
         if (user == null) {
             logger.warning("User not found for authentication: " + authentication.getName());
             return ResponseEntity.status(401).build();
         }
 
-        Optional<Task> optionalTask = taskRepository.findByIdAndUserId(id, user.getId());
+        Optional<Task> optionalTask = taskRepository.findByIdAndUserEmail(id, user.getEmail());
         if (optionalTask.isPresent()) {
             Task task = optionalTask.get();
             task.setTitle(updatedTask.getTitle());
@@ -113,13 +113,13 @@ public class TaskController {
             return ResponseEntity.status(401).build();
         }
 
-        User user = getUserFromAuthentication(authentication);
+        UserEntity user = getUserFromAuthentication(authentication);
         if (user == null) {
             logger.warning("User not found for authentication: " + authentication.getName());
             return ResponseEntity.status(401).build();
         }
 
-        Optional<Task> optionalTask = taskRepository.findByIdAndUserId(id, user.getId());
+        Optional<Task> optionalTask = taskRepository.findByIdAndUserEmail(id, user.getEmail());
         if (optionalTask.isPresent()) {
             taskRepository.delete(optionalTask.get());
             return ResponseEntity.ok().build();
@@ -128,13 +128,13 @@ public class TaskController {
         }
     }
 
-    private User getUserFromAuthentication(Authentication authentication) {
+    private UserEntity getUserFromAuthentication(Authentication authentication) {
         if (authentication == null) {
             return null;
         }
-        String username = authentication.getName();
-        logger.info("Authenticating user: " + username);
-        return userRepository.findByUsername(username).orElse(null);
+        String email = authentication.getName();
+        logger.info("Authenticating user: " + email);
+        return userEntityRepository.findByEmail(email).orElse(null);
     }
 }
 
