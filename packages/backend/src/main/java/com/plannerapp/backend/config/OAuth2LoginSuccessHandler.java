@@ -35,15 +35,16 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
 
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
-        if ("github".equals(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId())) {
+        if ("google".equals(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId())) {
             DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
             Map<String, Object> attributes = principal.getAttributes();
             String email = attributes.getOrDefault("email", "").toString();
             String name = attributes.getOrDefault("name", "").toString();
+            String picture = attributes.getOrDefault("picture", "").toString();
             userService.findByEmail(email)
                     .ifPresentOrElse(user -> {
                         DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(user.getRole().name())),
-                                attributes, "id");
+                                attributes, "sub");
                         Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(user.getRole().name())),
                                 oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
                         SecurityContextHolder.getContext().setAuthentication(securityAuth);
@@ -52,10 +53,11 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
                         userEntity.setRole(UserRole.ROLE_USER);
                         userEntity.setEmail(email);
                         userEntity.setName(name);
+                        userEntity.setPicture(picture);
                         userEntity.setSource(RegistrationSource.GOOGLE);
                         userService.save(userEntity);
                         DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(userEntity.getRole().name())),
-                                attributes, "id");
+                                attributes, "sub");
                         Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(userEntity.getRole().name())),
                                 oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
                         SecurityContextHolder.getContext().setAuthentication(securityAuth);

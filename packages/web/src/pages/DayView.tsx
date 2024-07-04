@@ -49,7 +49,7 @@ const DayView: React.FC = () => {
   const task = {
     title: "the title",
     notes: "the notes",
-    dueDate: "2024-06-26",
+    dueDate: "2024-07-04",
     completed: false,
     category: "DAILY" as Category,
     priority: "HIGH" as Priority,

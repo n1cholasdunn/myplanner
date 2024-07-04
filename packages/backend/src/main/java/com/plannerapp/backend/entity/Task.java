@@ -1,6 +1,7 @@
 package com.plannerapp.backend.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private UserEntity user;
 
     public enum Priority {

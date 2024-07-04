@@ -1,5 +1,6 @@
 package com.plannerapp.backend.controller;
 
+import com.plannerapp.backend.dto.TaskDTO;
 import com.plannerapp.backend.entity.Task;
 import com.plannerapp.backend.entity.UserEntity;
 import com.plannerapp.backend.repository.TaskRepository;
@@ -7,11 +8,14 @@ import com.plannerapp.backend.repository.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tasks")
@@ -26,7 +30,7 @@ public class TaskController {
     private UserEntityRepository userEntityRepository;
 
     @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks(Authentication authentication) {
+    public ResponseEntity<List<TaskDTO>> getAllTasks(Authentication authentication) {
         if (authentication == null) {
             logger.warning("Unauthorized access attempt to get all tasks.");
             return ResponseEntity.status(401).build();
@@ -34,16 +38,22 @@ public class TaskController {
 
         UserEntity user = getUserFromAuthentication(authentication);
         if (user == null) {
-            logger.warning("User not found for authentication: " + authentication.getName());
+            logger.warning("User not found for authentication: " + authentication.getDetails());
             return ResponseEntity.status(401).build();
         }
 
         List<Task> tasks = taskRepository.findByUserEmail(user.getEmail());
-        return ResponseEntity.ok(tasks);
+
+        List<TaskDTO> taskDTOs = tasks.stream()
+                .map(task -> new TaskDTO(task.getId(), task.getTitle(), task.getNotes(),
+                        task.getPriority().name(), task.getDueDate(),
+                        task.isCompleted(), task.getCategory().name()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(taskDTOs);
     }
 
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task, Authentication authentication) {
+    public ResponseEntity<TaskDTO> createTask(@RequestBody Task task, Authentication authentication) {
         if (authentication == null) {
             logger.warning("Unauthorized access attempt to create a task.");
             return ResponseEntity.status(401).build();
@@ -55,9 +65,15 @@ public class TaskController {
             return ResponseEntity.status(401).build();
         }
 
+ //       task.setUser(user);
+   //     Task savedTask = taskRepository.save(task);
+     //   return ResponseEntity.ok(savedTask);
         task.setUser(user);
         Task savedTask = taskRepository.save(task);
-        return ResponseEntity.ok(savedTask);
+        TaskDTO taskDTO = new TaskDTO(savedTask.getId(), savedTask.getTitle(), savedTask.getNotes(),
+                savedTask.getPriority().name(), savedTask.getDueDate(),
+                savedTask.isCompleted(), savedTask.getCategory().name());
+        return ResponseEntity.ok(taskDTO);
     }
 
     @GetMapping("/{id}")
@@ -132,7 +148,9 @@ public class TaskController {
         if (authentication == null) {
             return null;
         }
-        String email = authentication.getName();
+        DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
+        Map<String, Object> attributes = principal.getAttributes();
+        String email = attributes.getOrDefault("email", "").toString();
         logger.info("Authenticating user: " + email);
         return userEntityRepository.findByEmail(email).orElse(null);
     }

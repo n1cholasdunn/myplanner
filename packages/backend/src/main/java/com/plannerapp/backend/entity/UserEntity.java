@@ -1,5 +1,6 @@
 package com.plannerapp.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,6 +19,8 @@ public class UserEntity {
 
     private String email;
 
+    private String picture;
+
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private UserRole role;
@@ -27,6 +30,7 @@ public class UserEntity {
     private RegistrationSource source;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Task> tasks;
 
 }

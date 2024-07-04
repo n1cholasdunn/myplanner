@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Task } from "../types/tasks";
 import { TaskInput } from "../schema";
-
+import { SERVER_URL } from "../constants";
+/*
 const fetchTasks = async (): Promise<Task[]> => {
   const response = await fetch("http://localhost:8080/tasks", {
     method: "GET",
@@ -16,10 +17,28 @@ const fetchTasks = async (): Promise<Task[]> => {
 
   return response.json();
 };
+*/
+const fetchTasks = async () => {
+  console.log(SERVER_URL);
+  const response = await fetch(`${SERVER_URL}/tasks`, {
+    method: "GET",
+    redirect: "follow",
+    credentials: "include",
+  }).then((response) => response);
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  console.log("fetch all tasks response", data);
+  return data;
+};
 
 const fetchTask = async (id: number): Promise<Task> => {
-  const response = await fetch(`http://localhost:8080/tasks/${id}`, {
+  const response = await fetch(`${SERVER_URL}/tasks/${id}`, {
     method: "GET",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -29,12 +48,14 @@ const fetchTask = async (id: number): Promise<Task> => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  return data;
 };
 
 const createTask = async (task: TaskInput): Promise<Task> => {
-  const response = await fetch("http://localhost:8080/tasks", {
+  const response = await fetch(`${SERVER_URL}/tasks`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -45,12 +66,15 @@ const createTask = async (task: TaskInput): Promise<Task> => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  console.log("response create", response.json());
+  return data;
 };
 
 const updateTask = async (id: number, task: TaskInput): Promise<Task> => {
   const response = await fetch(`http://localhost:8080/tasks/${id}`, {
     method: "PUT",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -61,12 +85,14 @@ const updateTask = async (id: number, task: TaskInput): Promise<Task> => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  return data;
 };
 
 const deleteTask = async (id: number): Promise<void> => {
   const response = await fetch(`http://localhost:8080/tasks/${id}`, {
     method: "DELETE",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
