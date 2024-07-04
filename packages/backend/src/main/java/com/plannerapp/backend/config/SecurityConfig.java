@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -29,13 +30,16 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/login", "/oauth2/**").permitAll();
+                    auth.requestMatchers("/","/login", "/oauth2/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
+
                 .oauth2Login(oath2 -> {
                     oath2.loginPage(frontendUrl +"/login").permitAll();
                     oath2.successHandler(oAuth2LoginSuccessHandler);

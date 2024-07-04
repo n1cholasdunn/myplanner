@@ -3,15 +3,14 @@ import { SERVER_URL } from "../constants";
 import { User } from "src/types/user";
 
 const fetchUser = async () => {
-  const response = await fetch(SERVER_URL + "/user-info", {
+  const response = await fetch("api/user-info", {
     method: "GET",
     redirect: "follow",
     credentials: "include",
   }).then((response) => response);
 
-  if (response.redirected) {
-    document.location = response.url;
-  }
+  console.log("fetch user response", response);
+
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
