@@ -41,11 +41,6 @@ const DayView: React.FC = () => {
     dayjs(task.dueDate).isSame(selectedDate, "day"),
   );
 
-  useEffect(() => {
-    console.log("filteredTasks", filteredTasks);
-    console.log("tasks", tasks);
-  }, [filteredTasks, tasks]);
-
   const task = {
     title: "the title",
     notes: "the notes",

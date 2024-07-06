@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from "react";
 import MiniCalendar from "../components/MiniCalendar";
 import ViewMenu from "../components/ViewMenu";
 import { useTasks } from "../hooks/useTasks";
-import TaskList from "../components/TaskList";
+import ThreeDayTaskList from "../components/ThreeDayTaskList";
 import dayjs, { Dayjs } from "dayjs";
 import { getWeekDays } from "../utils/calendar";
 import { Category, Priority } from "../types/tasks";
@@ -20,33 +20,30 @@ const DayView: React.FC = () => {
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
-  const containerOffset = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    // Set the container scroll position based on the current time.
-    const currentMinute = new Date().getHours() * 60;
-    if (container.current && containerNav.current && containerOffset.current) {
-      container.current.scrollTop =
-        ((container.current.scrollHeight -
-          containerNav.current.offsetHeight -
-          containerOffset.current.offsetHeight) *
-          currentMinute) /
-        1440;
-    }
-  }, []);
 
   const { tasks, addTask } = useTasks();
 
-  const filteredTasks = tasks?.filter((task) =>
-    dayjs(task.dueDate).isSame(selectedDate, "day"),
-  );
+  const filteredTasks = tasks?.filter((task) => {
+    const taskDate = dayjs(task.dueDate);
+    const startDate = selectedDate.startOf("day");
+    const endDate = selectedDate.add(2, "day").endOf("day");
+    return (
+      taskDate.isSame(startDate, "day") ||
+      (taskDate.isAfter(startDate) && taskDate.isBefore(endDate))
+    );
+  });
+
+  useEffect(() => {
+    console.log("filteredTasks", filteredTasks);
+    console.log("tasks", tasks);
+  }, [filteredTasks, tasks]);
 
   const task = {
-    title: "the title",
-    notes: "the notes",
-    dueDate: "2024-07-04",
+    title: "the gooser",
+    notes: "goober",
+    dueDate: "2024-07-06",
     completed: false,
-    category: "DAILY" as Category,
+    category: "RELATIONSHIP" as Category,
     priority: "HIGH" as Priority,
   };
 
@@ -194,7 +191,7 @@ const DayView: React.FC = () => {
               </button>
             ))}
           </div>
-          <TaskList tasks={filteredTasks} />
+          <ThreeDayTaskList tasks={filteredTasks} selectedDate={selectedDate} />
         </div>
         <MiniCalendar
           currentMonth={currentMonth}
