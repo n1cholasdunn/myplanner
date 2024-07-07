@@ -6,6 +6,7 @@ import User from "./pages/User";
 import Login from "./pages/Login";
 import ThreeDayView from "./pages/ThreeDayView";
 import ProtectedRoute from "./components/ProtectedRoute";
+import WeekView from "./components/WeekView";
 
 const AppRouter = () => {
   return (
@@ -34,6 +35,14 @@ const AppRouter = () => {
           element={
             <ProtectedRoute>
               <ThreeDayView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/week-view"
+          element={
+            <ProtectedRoute>
+              <WeekView />
             </ProtectedRoute>
           }
         />
