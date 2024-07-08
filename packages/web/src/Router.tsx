@@ -6,7 +6,7 @@ import User from "./pages/User";
 import Login from "./pages/Login";
 import ThreeDayView from "./pages/ThreeDayView";
 import ProtectedRoute from "./components/ProtectedRoute";
-import WeekView from "./components/WeekView";
+import WeekView from "./pages/WeekView";
 
 const AppRouter = () => {
   return (

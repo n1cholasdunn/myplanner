@@ -8,12 +8,12 @@ import { useState, useEffect, useRef } from "react";
 import MiniCalendar from "../components/MiniCalendar";
 import ViewMenu from "../components/ViewMenu";
 import { useTasks } from "../hooks/useTasks";
-import ThreeDayTaskList from "../components/ThreeDayTaskList";
 import dayjs, { Dayjs } from "dayjs";
 import { getWeekDays } from "../utils/calendar";
 import { Category, Priority } from "../types/tasks";
 import { classNames } from "../utils/classNames";
 import Avatar from "../components/Avatar";
+import WeekTaskList from "../components/WeekTaskList";
 
 const WeekView: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
@@ -38,11 +38,11 @@ const WeekView: React.FC = () => {
   }, [filteredTasks]);
 
   const task = {
-    title: "the gooser",
-    notes: "goober",
-    dueDate: "2024-07-06",
+    title: "code running thing",
+    notes: "longgg day",
+    dueDate: "2024-07-10",
     completed: false,
-    category: "RELATIONSHIP" as Category,
+    category: "CAREER" as Category,
     priority: "HIGH" as Priority,
   };
 
@@ -190,7 +190,7 @@ const WeekView: React.FC = () => {
               </button>
             ))}
           </div>
-          <ThreeDayTaskList tasks={filteredTasks} selectedDate={selectedDate} />
+          <WeekTaskList tasks={filteredTasks} selectedDate={selectedDate} />
         </div>
         <MiniCalendar
           currentMonth={currentMonth}

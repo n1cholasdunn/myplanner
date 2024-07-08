@@ -15,7 +15,7 @@ import { Category, Priority } from "../types/tasks";
 import { classNames } from "../utils/classNames";
 import Avatar from "../components/Avatar";
 
-const DayView: React.FC = () => {
+const ThreeDayView: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
   const container = useRef<HTMLDivElement | null>(null);
@@ -204,4 +204,4 @@ const DayView: React.FC = () => {
   );
 };
 
-export default DayView;
+export default ThreeDayView;

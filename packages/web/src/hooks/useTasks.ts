@@ -3,24 +3,6 @@ import { Task } from "../types/tasks";
 import { TaskInput } from "../schema";
 import { SERVER_URL } from "../constants";
 
-const ffetchTasks = async () => {
-  const response = await fetch(`${SERVER_URL}/tasks`, {
-    method: "GET",
-    redirect: "follow",
-    credentials: "include",
-  }).then((response) => response);
-
-  if (response.redirected) {
-    document.location = response.url;
-  }
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  const data = await response.json();
-  console.log("fetch all tasks response", data);
-  return data;
-};
 const fetchTasks = async (): Promise<Task[]> => {
   const response = await fetch(`api/tasks`, {
     method: "GET",
@@ -30,8 +12,6 @@ const fetchTasks = async (): Promise<Task[]> => {
       "Content-Type": "application/json",
     },
   });
-
-  console.log("fetch all tasks response", response);
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
