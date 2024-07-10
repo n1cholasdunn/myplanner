@@ -4,76 +4,16 @@ import {
   ChevronRightIcon,
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
-import { useState, useEffect, useRef } from "react";
-import MiniCalendar from "../components/MiniCalendar";
 import ViewMenu from "../components/ViewMenu";
-import { useTasks } from "../hooks/useTasks";
-import TaskList from "../components/TaskList";
-import dayjs, { Dayjs } from "dayjs";
-import { getWeekDays } from "../utils/calendar";
-import { Category, Priority } from "../types/tasks";
-import { classNames } from "../utils/classNames";
 import Avatar from "../components/Avatar";
-import { useDates } from "../hooks/useDates";
+import { Dayjs } from "dayjs";
 
-const DayView: React.FC = () => {
-  //const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
-  // const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
-  const {
-    selectedDate,
-    currentMonth,
-    goToToday,
-    handleDateSelect,
-    setCurrentMonth,
-  } = useDates();
-  const container = useRef<HTMLDivElement | null>(null);
-  const containerNav = useRef<HTMLDivElement | null>(null);
-  const containerOffset = useRef<HTMLDivElement | null>(null);
+type HeaderProps = {
+  selectedDate: Dayjs;
+}
 
-  useEffect(() => {
-    // Set the container scroll position based on the current time.
-    const currentMinute = new Date().getHours() * 60;
-    if (container.current && containerNav.current && containerOffset.current) {
-      container.current.scrollTop =
-        ((container.current.scrollHeight -
-          containerNav.current.offsetHeight -
-          containerOffset.current.offsetHeight) *
-          currentMinute) /
-        1440;
-    }
-  }, []);
-
-  const { tasks, addTask } = useTasks();
-
-  const filteredTasks = tasks?.filter((task) =>
-    dayjs(task.dueDate).isSame(selectedDate, "day"),
-  );
-
-  const task = {
-    title: "the title",
-    notes: "the notes",
-    dueDate: "2024-07-04",
-    completed: false,
-    category: "DAILY" as Category,
-    priority: "HIGH" as Priority,
-  };
-
-  /*
-  const handleDateSelect = (date: Dayjs) => {
-    setSelectedDate(date);
-    if (!date.isSame(currentMonth, "month")) {
-      setCurrentMonth(date);
-    }
-  };
-
-  const goToToday = () => {
-    const today = dayjs();
-    setSelectedDate(today);
-    setCurrentMonth(today);
-  };
-  */
+const Header:React.FC<HeaderProps> = ({selectedDate}) => {
   return (
-    <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-200 px-6 py-4">
         <div>
           <h1 className="text-base font-semibold leading-6 text-gray-900">
@@ -170,51 +110,8 @@ const DayView: React.FC = () => {
           </Menu>
         </div>
       </header>
-      <div className="isolate flex flex-auto overflow-hidden bg-white">
-        <div ref={container} className="flex flex-auto flex-col overflow-auto">
-          <div
-            ref={containerNav}
-            className="sticky top-0 z-10 grid flex-none grid-cols-7 bg-white text-xs text-gray-500 shadow ring-1 ring-black ring-opacity-5 md:hidden"
-          >
-            {getWeekDays(currentMonth, selectedDate).map((day, idx) => (
-              <button
-                key={idx}
-                type="button"
-                className={classNames(
-                  "flex flex-col items-center pb-1.5 pt-3 text-gray-900  hover:bg-gray-100",
-                  selectedDate.isSame(day.date, "day") && " font-semibold",
-                )}
-                onClick={() => handleDateSelect(dayjs(day.date))}
-              >
-                <span>{dayjs(day.date).format("dd")[0]}</span>
-                <span className="mt-3 flex h-8 w-8 items-center justify-center rounded-full text-base font-semibold text-gray-900">
-                  <time
-                    dateTime={day.date}
-                    className={classNames(
-                      "mx-auto flex h-7 w-7 items-center justify-center rounded-full",
-                      selectedDate.isSame(day.date, "day") &&
-                        "bg-red-600 text-white",
-                      day.isSelected && day.isToday && "bg-indigo-600",
-                      day.isSelected && !day.isToday && "bg-gray-900",
-                    )}
-                  >
-                    {day.date.split("-").pop()?.replace(/^0/, "")}
-                  </time>
-                </span>
-              </button>
-            ))}
-          </div>
-          <TaskList tasks={filteredTasks} />
-        </div>
-        <MiniCalendar
-          currentMonth={currentMonth}
-          selectedDate={selectedDate}
-          onDateSelect={handleDateSelect}
-          onMonthChange={setCurrentMonth}
-        />
-      </div>
-    </div>
-  );
-};
 
-export default DayView;
+Header:React.FC<HeaderProps>  )
+}
+
+export default Header:React.FC<HeaderProps>
