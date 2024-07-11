@@ -43,11 +43,8 @@ const TaskBox: React.FC<TaskBoxProps> = ({
   };
 
   return (
-    <li
-      className={`relative mt-px flex ${getBackgroundColor()}`}
-      style={{ gridRow: "auto / span 1" }}
-    >
-      <div className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg p-2 text-xs leading-5">
+    <li className={`relative mt-px flex ${getBackgroundColor()}`}>
+      <div className="group absolute inset-1 flex flex-col rounded-lg p-2 text-xs leading-5">
         <p className={`text-${getCategoryColor()}-700 order-1 font-semibold`}>
           {title}
         </p>

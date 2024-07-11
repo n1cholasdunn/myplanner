@@ -4,12 +4,12 @@ import {
   ChevronRightIcon,
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import MiniCalendar from "../components/MiniCalendar";
 import ViewMenu from "../components/ViewMenu";
 import { useTasks } from "../hooks/useTasks";
 import TaskList from "../components/TaskList";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { getWeekDays } from "../utils/calendar";
 import { Category, Priority } from "../types/tasks";
 import { classNames } from "../utils/classNames";
@@ -28,20 +28,6 @@ const DayView: React.FC = () => {
   } = useDates();
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
-  const containerOffset = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    // Set the container scroll position based on the current time.
-    const currentMinute = new Date().getHours() * 60;
-    if (container.current && containerNav.current && containerOffset.current) {
-      container.current.scrollTop =
-        ((container.current.scrollHeight -
-          containerNav.current.offsetHeight -
-          containerOffset.current.offsetHeight) *
-          currentMinute) /
-        1440;
-    }
-  }, []);
 
   const { tasks, addTask } = useTasks();
 
@@ -52,7 +38,7 @@ const DayView: React.FC = () => {
   const task = {
     title: "the title",
     notes: "the notes",
-    dueDate: "2024-07-04",
+    dueDate: "2024-07-10",
     completed: false,
     category: "DAILY" as Category,
     priority: "HIGH" as Priority,
