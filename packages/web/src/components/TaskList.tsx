@@ -9,20 +9,18 @@ interface TaskListProps {
 
 const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
   return (
-    <div className="flex w-full flex-auto">
-      <div className="grid flex-auto">
-        <div className=" grid gap-2 divide-y divide-gray-100">
-          {tasks && (
-            <DndContext>
-              <SortableContext items={tasks}>
-                {tasks.map((task, index) => (
-                  <TaskBox key={index} {...task} />
-                ))}
-              </SortableContext>
-            </DndContext>
-          )}
-        </div>
-      </div>
+    <div className="flex  w-full flex-auto flex-col  gap-2">
+      {tasks && (
+        <DndContext>
+          <SortableContext items={tasks}>
+            {tasks.map((task, index) => (
+              <div className="flex-none">
+                <TaskBox key={index} {...task} />
+              </div>
+            ))}
+          </SortableContext>
+        </DndContext>
+      )}
     </div>
   );
 };

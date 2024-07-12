@@ -44,7 +44,7 @@ const TaskBox: React.FC<TaskBoxProps> = ({
 
   return (
     <li className={`relative mt-px flex ${getBackgroundColor()}`}>
-      <div className="group absolute inset-1 flex flex-col rounded-lg p-2 text-xs leading-5">
+      <div className="group  inset-1 flex flex-col rounded-lg p-2 text-xs leading-5">
         <p className={`text-${getCategoryColor()}-700 order-1 font-semibold`}>
           {title}
         </p>
