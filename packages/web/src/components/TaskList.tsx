@@ -52,8 +52,8 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, setFilteredTasks }) => {
         >
           <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
             {tasks.map((task) => (
-              <div className="flex-none">
-                <TaskBox key={task.id} {...task} />
+              <div key={task.id} className="flex-none">
+                <TaskBox {...task} />
               </div>
             ))}
           </SortableContext>

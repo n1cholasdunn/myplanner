@@ -5,18 +5,22 @@ import TaskList from "../components/TaskList";
 import dayjs from "dayjs";
 import { getWeekDays } from "../utils/calendar";
 import { classNames } from "../utils/classNames";
-import { useDates } from "../hooks/useDates";
 import Header from "../components/Header";
 import { Task as TaskType } from "../types/tasks";
+import { useDatesContext } from "../context/DatesContext";
 
 const DayView: React.FC = () => {
   const { selectedDate, currentMonth, handleDateSelect, setCurrentMonth } =
-    useDates();
+    useDatesContext();
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
 
   const { tasks } = useTasks();
   const [filteredTasks, setFilteredTasks] = useState<TaskType[]>([]);
+
+  useEffect(() => {
+    console.log("selectedDate:", selectedDate);
+  }, [selectedDate]);
 
   useEffect(() => {
     if (tasks) {

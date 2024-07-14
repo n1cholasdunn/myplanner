@@ -1,5 +1,4 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { SERVER_URL } from "../constants";
 import { User } from "src/types/user";
 
 const fetchUser = async () => {
@@ -8,8 +7,6 @@ const fetchUser = async () => {
     redirect: "follow",
     credentials: "include",
   }).then((response) => response);
-
-  console.log("fetch user response", response);
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -33,6 +30,5 @@ export const useUser = (): {
     enabled: true,
   });
 
-  console.log("user", user);
   return { user: user ?? undefined, error, isLoading };
 };

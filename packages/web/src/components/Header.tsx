@@ -7,11 +7,12 @@ import {
 import ViewMenu from "../components/ViewMenu";
 import Avatar from "../components/Avatar";
 import { Category, Priority } from "../types/tasks";
-import { useDates } from "../hooks/useDates";
 import { useTasks } from "../hooks/useTasks";
+import { useEffect } from "react";
+import { useDatesContext } from "../context/DatesContext";
 
 const Header = () => {
-  const { selectedDate, goToToday, handleDateSelect } = useDates();
+  const { selectedDate, goToToday, handleDateSelect } = useDatesContext();
 
   const { addTask } = useTasks();
 
@@ -24,6 +25,9 @@ const Header = () => {
     priority: "HIGH" as Priority,
   };
 
+  useEffect(() => {
+    console.log("selectedDate header:", selectedDate);
+  }, [selectedDate]);
   return (
     <header className="flex flex-none items-center justify-between border-b border-gray-200 px-6 py-4">
       <div>
