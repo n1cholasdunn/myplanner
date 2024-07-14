@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import MiniCalendar from "../components/MiniCalendar";
 import { useTasks } from "../hooks/useTasks";
 import TaskList from "../components/TaskList";
@@ -7,6 +7,7 @@ import { getWeekDays } from "../utils/calendar";
 import { classNames } from "../utils/classNames";
 import { useDates } from "../hooks/useDates";
 import Header from "../components/Header";
+import { Task as TaskType } from "../types/tasks";
 
 const DayView: React.FC = () => {
   const { selectedDate, currentMonth, handleDateSelect, setCurrentMonth } =
@@ -15,10 +16,15 @@ const DayView: React.FC = () => {
   const containerNav = useRef<HTMLDivElement | null>(null);
 
   const { tasks } = useTasks();
+  const [filteredTasks, setFilteredTasks] = useState<TaskType[]>([]);
 
-  const filteredTasks = tasks?.filter((task) =>
-    dayjs(task.dueDate).isSame(selectedDate, "day"),
-  );
+  useEffect(() => {
+    if (tasks) {
+      setFilteredTasks(
+        tasks.filter((task) => dayjs(task.dueDate).isSame(selectedDate, "day")),
+      );
+    }
+  }, [tasks, selectedDate]);
 
   return (
     <div className="flex h-full flex-col">
@@ -57,7 +63,7 @@ const DayView: React.FC = () => {
               </button>
             ))}
           </div>
-          <TaskList tasks={filteredTasks} />
+          <TaskList tasks={filteredTasks} setFilteredTasks={setFilteredTasks} />
         </div>
         <MiniCalendar
           currentMonth={currentMonth}
