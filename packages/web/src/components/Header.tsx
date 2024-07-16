@@ -17,9 +17,9 @@ const Header = () => {
   const { addTask } = useTasks();
 
   const task = {
-    title: "the title",
+    title: "the goose title",
     notes: "the notes",
-    dueDate: "2024-07-10",
+    dueDate: "2024-07-15",
     completed: false,
     category: "DAILY" as Category,
     priority: "HIGH" as Priority,
