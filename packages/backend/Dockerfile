@@ -1,11 +1,24 @@
+# Use an official Maven image to build the app
+FROM maven:3.8.6-openjdk-21 AS build
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the pom.xml and source code
+COPY pom.xml .
+COPY src ./src
+
+# Build the application
+RUN mvn clean package -DskipTests
+
 # Use an official OpenJDK runtime as a parent image
 FROM openjdk:21-jdk-slim
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the JAR file into the container at /app
-COPY target/backend-0.0.1-SNAPSHOT.jar app.jar
+# Copy the JAR file from the build stage
+COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.jar app.jar
 
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
