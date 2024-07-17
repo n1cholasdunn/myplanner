@@ -1,5 +1,5 @@
 # Use an official Maven image to build the app
-FROM maven:3.9-amazoncorretto-21-alpine AS build
+FROM maven:3.9.8-eclipse-temurin-21 AS build
 
 # Set the working directory
 WORKDIR /app
