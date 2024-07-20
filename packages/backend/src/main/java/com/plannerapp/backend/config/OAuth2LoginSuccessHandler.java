@@ -41,6 +41,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             String email = attributes.getOrDefault("email", "").toString();
             String name = attributes.getOrDefault("name", "").toString();
             String picture = attributes.getOrDefault("picture", "").toString();
+         try{
             userService.findByEmail(email)
                     .ifPresentOrElse(user -> {
                         DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(user.getRole().name())),
@@ -62,6 +63,13 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
                                 oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
                         SecurityContextHolder.getContext().setAuthentication(securityAuth);
                     });
+
+        }catch (Exception e) {
+                e.printStackTrace();
+                // Handle exception and set appropriate error response
+                response.sendRedirect(frontendUrl + "/login?error");
+                return;
+            }
         }
         this.setAlwaysUseDefaultTargetUrl(true);
         this.setDefaultTargetUrl(frontendUrl);

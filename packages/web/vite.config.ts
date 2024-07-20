@@ -28,6 +28,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
+        configure: (proxy, options) => {
+          proxy.on("proxyReq", (proxyReq, req, res) => {
+            proxyReq.setHeader("ngrok-skip-browser-warning", "any-value");
+          });
+        },
       },
     },
   },
