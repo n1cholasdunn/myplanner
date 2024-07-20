@@ -67,7 +67,8 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         }catch (Exception e) {
                 e.printStackTrace();
                 // Handle exception and set appropriate error response
-                response.sendRedirect(frontendUrl + "/login?error");
+             System.out.println("Error during OAuth2 authentication: " + e.getMessage());
+                response.sendRedirect(frontendUrl + "/login?catcherror");
                 return;
             }
         }
