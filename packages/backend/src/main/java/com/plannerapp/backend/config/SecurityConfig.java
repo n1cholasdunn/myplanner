@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/","/login", "/oauth2/**").permitAll();
+                    //auth.requestMatchers("/","/login", "/oauth2/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
 
@@ -50,7 +50,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(frontendUrl,"http://localhost:5173", "https://myplanner-production.up.railway.app"));
+        configuration.setAllowedOrigins(List.of(frontendUrl,"http://192.168.1.186:5173","https://myplanner-production.up.railway.app"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
