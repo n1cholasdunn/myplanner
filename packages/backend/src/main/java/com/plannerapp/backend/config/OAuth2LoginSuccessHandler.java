@@ -9,6 +9,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,6 +30,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     private final UserService userService;
 
+    private static final Logger logger = LoggerFactory.getLogger(OAuth2LoginSuccessHandler.class);
     @Value("${frontend.url}")
     private String frontendUrl;
 
@@ -49,7 +52,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
                         Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(user.getRole().name())),
                                 oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
                         SecurityContextHolder.getContext().setAuthentication(securityAuth);
-                        System.out.println("Existing user authenticated: " + email);
+                        logger.info("Existing user authenticated: {}", email);
                     }, () -> {
                         UserEntity userEntity = new UserEntity();
                         userEntity.setRole(UserRole.ROLE_USER);
@@ -63,13 +66,13 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
                         Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(userEntity.getRole().name())),
                                 oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
                         SecurityContextHolder.getContext().setAuthentication(securityAuth);
-                        System.out.println("New user registered and authenticated: " + email);
+                        logger.info("New user registered and authenticated: {}", email);
                     });
 
         }catch (Exception e) {
                 e.printStackTrace();
                 // Handle exception and set appropriate error response
-             System.out.println("Error during OAuth2 authentication: " + e.getMessage());
+             logger.error("Error during OAuth2 authentication", e);
                 response.sendRedirect(frontendUrl + "/login?catcherror");
                 return;
             }
