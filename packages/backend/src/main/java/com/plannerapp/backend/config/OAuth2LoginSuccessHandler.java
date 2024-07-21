@@ -36,14 +36,17 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
-
+        logger.debug("Authentication success handler triggered");
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
+        logger.debug("Client registration ID: {}", oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
+
         if ("google".equals(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId())) {
             DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
             Map<String, Object> attributes = principal.getAttributes();
             String email = attributes.getOrDefault("email", "").toString();
             String name = attributes.getOrDefault("name", "").toString();
             String picture = attributes.getOrDefault("picture", "").toString();
+            logger.debug("User attributes: email={}, name={}, picture={}", email, name, picture);
          try{
             userService.findByEmail(email)
                     .ifPresentOrElse(user -> {
