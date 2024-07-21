@@ -6,7 +6,7 @@ import { SERVER_URL } from "../constants";
 const fetchTasks = async (): Promise<Task[]> => {
   const response = await fetch(`api/tasks`, {
     method: "GET",
-    redirect: "follow",
+    //redirect: "follow",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",

@@ -4,7 +4,7 @@ import { User } from "src/types/user";
 const fetchUser = async () => {
   const response = await fetch("api/user-info", {
     method: "GET",
-    redirect: "follow",
+    //redirect: "follow",
     credentials: "include",
   }).then((response) => response);
 
