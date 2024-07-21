@@ -24,15 +24,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
+        // target: "http://localhost:8080",
         target: "https://myplanner-production.up.railway.app",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
-        configure: (proxy, options) => {
-          proxy.on("proxyReq", (proxyReq, req, res) => {
-            proxyReq.setHeader("ngrok-skip-browser-warning", "any-value");
-          });
-        },
       },
     },
   },
