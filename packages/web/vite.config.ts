@@ -26,7 +26,8 @@ export default defineConfig({
       "/api": {
         // target: "http://localhost:8080",
         //target: "https://myplanner-production.up.railway.app",
-        target: process.env.VITE_API_URL,
+        //   target: process.env.VITE_API_URL,
+        target: "reliable-harmony.railway.internal",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
