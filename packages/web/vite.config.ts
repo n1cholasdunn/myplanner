@@ -25,8 +25,8 @@ export default defineConfig({
     proxy: {
       "/api": {
         // target: "http://localhost:8080",
-        target: "https://myplanner-production.up.railway.app",
-        //   target: process.env.VITE_API_URL,
+        //   target: "https://myplanner-production.up.railway.app",
+        target: process.env.VITE_API_URL,
         // target: "https://myplanner.railway.internal",
         changeOrigin: true,
         secure: false,
