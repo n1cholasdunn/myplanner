@@ -38,8 +38,10 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         logger.debug("Authentication success handler triggered");
+        System.out.println("Authentication success handler triggered");
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
         logger.debug("Client registration ID: {}", oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
+        System.out.println("Client registration ID: {}");
 
         if ("google".equals(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId())) {
             DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
@@ -76,8 +78,8 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         }catch (Exception e) {
                 e.printStackTrace();
                 // Handle exception and set appropriate error response
-             logger.error("Error during OAuth2 authentication", e);
-                response.sendRedirect(frontendUrl + "/login?catcherror");
+             System.out.println("Error during OAuth2 authentication");
+                response.sendRedirect(frontendUrl + "/login?error");
                 return;
             }
         }
