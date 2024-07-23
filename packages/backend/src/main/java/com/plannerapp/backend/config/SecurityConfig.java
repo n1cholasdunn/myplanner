@@ -50,7 +50,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(frontendUrl,"http://192.168.1.186:5173","https://myplanner-production.up.railway.app","reliable-harmony.railway.internal"));
+        configuration.setAllowedOrigins(List.of(frontendUrl,"http://192.168.1.186:5173","https://myplanner-production.up.railway.app","https://reliable-harmony.railway.internal"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
