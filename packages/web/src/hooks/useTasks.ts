@@ -2,15 +2,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Task } from "../types/tasks";
 import { TaskInput } from "../schema";
 import { SERVER_URL } from "../constants";
+import { useUser } from "./useUser";
 
 const fetchTasks = async (): Promise<Task[]> => {
   const response = await fetch(`api/tasks`, {
     method: "GET",
     //redirect: "follow",
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   if (!response.ok) {
@@ -56,7 +54,7 @@ const createTask = async (task: TaskInput): Promise<Task> => {
   return data;
 };
 
-const updateTask = async (id: number, task: TaskInput): Promise<Task> => {
+const updateTask = async (id: number, task: Task): Promise<Task> => {
   const response = await fetch(`http://localhost:8080/tasks/${id}`, {
     method: "PUT",
     credentials: "include",
@@ -91,11 +89,14 @@ const deleteTask = async (id: number): Promise<void> => {
 export const useTasks = () => {
   const queryClient = useQueryClient();
 
+  const { user } = useUser();
+
   const {
     data: tasks,
     error: tasksError,
     isLoading: tasksLoading,
   } = useQuery<Task[], Error>({
+    enabled: !!user,
     queryKey: ["tasks"],
     queryFn: fetchTasks,
   });
@@ -110,7 +111,7 @@ export const useTasks = () => {
   const updateTaskMutation = useMutation<
     Task,
     Error,
-    { id: number; data: TaskInput }
+    { id: number; data: Task }
   >({
     mutationFn: ({ id, data }) => updateTask(id, data),
     onSuccess: () => {

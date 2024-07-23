@@ -2,16 +2,16 @@ import AddIcon from "shared/assets/008-add.svg?react";
 import { useTasks } from "../hooks/useTasks";
 
 const AddTaskButton = () => {
-  const { createTask } = useTasks();
+  const { addTask } = useTasks();
   //TODO: make this hoverable
   return (
     <div>
       <AddIcon
         onClick={() =>
-          createTask({
+          addTask({
             title: "the title",
             notes: "the notes",
-            dueDate: new Date("2024-06-18"),
+            dueDate: "2024-06-18",
             completed: false,
             category: "DAILY",
             priority: "HIGH",
