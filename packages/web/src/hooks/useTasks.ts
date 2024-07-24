@@ -3,9 +3,10 @@ import { Task } from "../types/tasks";
 import { TaskInput } from "../schema";
 import { SERVER_URL } from "../constants";
 import { useUser } from "./useUser";
+import { API_URL } from "src/utils/api";
 
 const fetchTasks = async (): Promise<Task[]> => {
-  const response = await fetch(`api/tasks`, {
+  const response = await fetch(`${API_URL}/tasks`, {
     method: "GET",
     //redirect: "follow",
     credentials: "include",
