@@ -1,8 +1,9 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { User } from "src/types/user";
+import { API_URL } from "../utils/api";
 
 const fetchUser = async () => {
-  const response = await fetch("api/user-info", {
+  const response = await fetch(`${API_URL}/user-info`, {
     method: "GET",
     //redirect: "follow",
     credentials: "include",

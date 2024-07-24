@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Task } from "../types/tasks";
 import { TaskInput } from "../schema";
-import { SERVER_URL } from "../constants";
 import { useUser } from "./useUser";
 import { API_URL } from "../utils/api";
 
@@ -20,7 +19,7 @@ const fetchTasks = async (): Promise<Task[]> => {
   return data;
 };
 const fetchTask = async (id: number): Promise<Task> => {
-  const response = await fetch(`api/tasks/${id}`, {
+  const response = await fetch(`${API_URL}/tasks/${id}`, {
     method: "GET",
     credentials: "include",
     headers: {
@@ -37,7 +36,7 @@ const fetchTask = async (id: number): Promise<Task> => {
 };
 
 const createTask = async (task: TaskInput): Promise<Task> => {
-  const response = await fetch(`${SERVER_URL}/tasks`, {
+  const response = await fetch(`${API_URL}/tasks`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -56,7 +55,7 @@ const createTask = async (task: TaskInput): Promise<Task> => {
 };
 
 const updateTask = async (id: number, task: Task): Promise<Task> => {
-  const response = await fetch(`http://localhost:8080/tasks/${id}`, {
+  const response = await fetch(`${API_URL}/tasks/${id}`, {
     method: "PUT",
     credentials: "include",
     headers: {
@@ -74,7 +73,7 @@ const updateTask = async (id: number, task: Task): Promise<Task> => {
 };
 
 const deleteTask = async (id: number): Promise<void> => {
-  const response = await fetch(`http://localhost:8080/tasks/${id}`, {
+  const response = await fetch(`${API_URL}/tasks/${id}`, {
     method: "DELETE",
     credentials: "include",
     headers: {
