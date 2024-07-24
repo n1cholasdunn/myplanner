@@ -1,4 +1,4 @@
-import { API_URL } from "src/utils/api";
+import { API_URL } from "../utils/api";
 
 const LoginButton = () => {
   const handleLogin = () => {
