@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 // https://vitejs.dev/config/
+console.log("API URL", process.env.VITE_API_URL);
 export default defineConfig({
   plugins: [
     react(),
@@ -29,7 +30,7 @@ export default defineConfig({
         target: process.env.VITE_API_URL,
         // target: "https://myplanner.railway.internal",
         changeOrigin: true,
-        secure: false,
+        secure: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
