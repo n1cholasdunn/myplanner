@@ -19,4 +19,5 @@ public class TaskDTO {
     private LocalDate dueDate;
     private boolean completed;
     private String category;
+    private Integer order;
 }

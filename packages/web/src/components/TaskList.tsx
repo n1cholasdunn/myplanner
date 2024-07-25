@@ -16,6 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import { useTasks } from "../hooks/useTasks";
 interface TaskListProps {
   tasks: TaskType[] | undefined;
   setFilteredTasks: React.Dispatch<React.SetStateAction<TaskType[]>>;
@@ -29,6 +30,8 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, setFilteredTasks }) => {
     }),
   );
 
+  const { updateTaskOrder } = useTasks();
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -36,8 +39,12 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, setFilteredTasks }) => {
       setFilteredTasks((items) => {
         const oldIndex = items.findIndex((item) => item.id === active.id);
         const newIndex = items.findIndex((item) => item.id === over.id);
+        const updatedTasks = arrayMove(items, oldIndex, newIndex);
 
-        return arrayMove(items, oldIndex, newIndex);
+        //persisting new order post drag
+        updateTaskOrder(updatedTasks);
+
+        return updatedTasks;
       });
     }
   };

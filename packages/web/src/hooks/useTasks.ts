@@ -72,6 +72,24 @@ const updateTask = async (id: number, task: Task): Promise<Task> => {
   return data;
 };
 
+const updateTaskOrder = async (updatedTasks: Task[]) => {
+  const response = await fetch(`${API_URL}/tasks/updateTaskOrder`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updatedTasks),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data;
+};
+
 const deleteTask = async (id: number): Promise<void> => {
   const response = await fetch(`${API_URL}/tasks/${id}`, {
     method: "DELETE",
@@ -119,6 +137,13 @@ export const useTasks = () => {
     },
   });
 
+  const updateTaskOrderMutation = useMutation({
+    mutationFn: updateTaskOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
   const removeTaskMutation = useMutation<void, Error, number>({
     mutationFn: deleteTask,
     onSuccess: () => {
@@ -141,5 +166,6 @@ export const useTasks = () => {
     addTask: addTaskMutation.mutate,
     updateTask: updateTaskMutation.mutate,
     removeTask: removeTaskMutation.mutate,
+    updateTaskOrder: updateTaskOrderMutation.mutate,
   };
 };

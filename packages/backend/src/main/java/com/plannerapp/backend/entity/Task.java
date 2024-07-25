@@ -18,6 +18,8 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     private Priority priority;
+    @Column(name = "\"order\"")
+    private Integer order;
 
     private LocalDate dueDate;
 
@@ -109,4 +111,9 @@ public class Task {
     public void setUser(UserEntity user) {
         this.user = user;
     }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+    public Integer getOrder (){return order;}
 }

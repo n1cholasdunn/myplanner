@@ -47,7 +47,7 @@ public class TaskController {
         List<TaskDTO> taskDTOs = tasks.stream()
                 .map(task -> new TaskDTO(task.getId(), task.getTitle(), task.getNotes(),
                         task.getPriority().name(), task.getDueDate(),
-                        task.isCompleted(), task.getCategory().name()))
+                        task.isCompleted(), task.getCategory().name(), task.getOrder()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(taskDTOs);
     }
@@ -64,15 +64,16 @@ public class TaskController {
             logger.warning("User not found for authentication: " + authentication.getName());
             return ResponseEntity.status(401).build();
         }
-
- //       task.setUser(user);
-   //     Task savedTask = taskRepository.save(task);
-     //   return ResponseEntity.ok(savedTask);
         task.setUser(user);
+
+        Integer maxOrder = taskRepository.findMaxOrderByUserId(user.getId());
+        task.setOrder(maxOrder != null ? maxOrder + 1 : 0);
+
+
         Task savedTask = taskRepository.save(task);
         TaskDTO taskDTO = new TaskDTO(savedTask.getId(), savedTask.getTitle(), savedTask.getNotes(),
                 savedTask.getPriority().name(), savedTask.getDueDate(),
-                savedTask.isCompleted(), savedTask.getCategory().name());
+                savedTask.isCompleted(), savedTask.getCategory().name(), savedTask.getOrder());
         return ResponseEntity.ok(taskDTO);
     }
 
@@ -142,6 +143,16 @@ public class TaskController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/updateTaskOrder")
+    public ResponseEntity<?> updateTaskOrder(@RequestBody List<Task> tasks) {
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            task.setOrder(i);
+            taskRepository.save(task);
+        }
+        return ResponseEntity.ok().build();
     }
 
     private UserEntity getUserFromAuthentication(Authentication authentication) {
