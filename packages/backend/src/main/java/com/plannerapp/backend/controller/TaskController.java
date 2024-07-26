@@ -146,14 +146,30 @@ public class TaskController {
     }
 
     @PostMapping("/updateTaskOrder")
-    public ResponseEntity<?> updateTaskOrder(@RequestBody List<Task> tasks) {
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-            task.setOrder(i);
-            taskRepository.save(task);
+    public ResponseEntity<?> updateTaskOrder(@RequestBody List<TaskDTO> taskDTOs, Authentication authentication) {
+        if (authentication == null) {
+            logger.warning("Unauthorized access attempt to update task order.");
+            return ResponseEntity.status(401).build();
         }
+
+        UserEntity user = getUserFromAuthentication(authentication);
+        if (user == null) {
+            logger.warning("User not found for authentication: " + authentication.getName());
+            return ResponseEntity.status(401).build();
+        }
+
+        for (TaskDTO taskDTO : taskDTOs) {
+            Optional<Task> optionalTask = taskRepository.findByIdAndUserEmail(taskDTO.getId(), user.getEmail());
+            if (optionalTask.isPresent()) {
+                Task task = optionalTask.get();
+                task.setOrder(taskDTO.getOrder());
+                taskRepository.save(task);
+            }
+        }
+
         return ResponseEntity.ok().build();
     }
+
 
     private UserEntity getUserFromAuthentication(Authentication authentication) {
         if (authentication == null) {

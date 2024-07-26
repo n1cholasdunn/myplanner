@@ -17,11 +17,11 @@ const Header = () => {
   const { addTask } = useTasks();
 
   const task = {
-    title: "running at track",
+    title: "beach run",
     notes: "the notes",
     dueDate: "2024-07-25",
     completed: false,
-    category: "DAILY" as Category,
+    category: "FITNESS" as Category,
     priority: "HIGH" as Priority,
   };
 

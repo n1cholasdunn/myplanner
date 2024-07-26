@@ -39,9 +39,13 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, setFilteredTasks }) => {
       setFilteredTasks((items) => {
         const oldIndex = items.findIndex((item) => item.id === active.id);
         const newIndex = items.findIndex((item) => item.id === over.id);
-        const updatedTasks = arrayMove(items, oldIndex, newIndex);
+        const updatedTasks = arrayMove(items, oldIndex, newIndex).map(
+          (task, index) => ({
+            ...task,
+            order: index + 1,
+          }),
+        );
 
-        //persisting new order post drag
         updateTaskOrder(updatedTasks);
 
         return updatedTasks;
