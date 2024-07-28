@@ -1,7 +1,7 @@
 import TaskBox from "./TaskBox";
 import { Task as TaskType } from "../types/tasks";
-import dayjs, { Dayjs } from "dayjs";
-import { Task } from "../types/tasks";
+import { Dayjs } from "dayjs";
+import { useCategorizeTasks } from "../hooks/categorizeTasks";
 
 interface ThreeDayTaskListProps {
   tasks: TaskType[] | undefined;
@@ -13,6 +13,7 @@ const ThreeDayTaskList: React.FC<ThreeDayTaskListProps> = ({
   selectedDate,
 }) => {
   //TODO: make this a hook
+  /*
   const categorizeTasksByDay = (
     tasks: TaskType[] | undefined,
     selectedDate: Dayjs,
@@ -37,6 +38,8 @@ const ThreeDayTaskList: React.FC<ThreeDayTaskListProps> = ({
     return { firstDayTasks, secondDayTasks, thirdDayTasks };
   };
 
+  */
+  const { categorizeTasksByDay } = useCategorizeTasks();
   const { firstDayTasks, secondDayTasks, thirdDayTasks } = categorizeTasksByDay(
     tasks,
     selectedDate,
