@@ -37,7 +37,7 @@ const ViewMenu = () => {
           <MenuItem>
             {({ focus }) => (
               <a
-                href="/week-view"
+                href="/view/week"
                 className={classNames(
                   focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
                   "block px-4 py-2 text-sm",
@@ -50,7 +50,7 @@ const ViewMenu = () => {
           <MenuItem>
             {({ focus }) => (
               <a
-                href="/3-day-view"
+                href="/view/3-day"
                 className={classNames(
                   focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
                   "block px-4 py-2 text-sm",
@@ -60,12 +60,10 @@ const ViewMenu = () => {
               </a>
             )}
           </MenuItem>
-
-          {/*TODO:  change routes for format /view/routename */}
           <MenuItem>
             {({ focus }) => (
               <a
-                href="/month-view"
+                href="/view/month"
                 className={classNames(
                   focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
                   "block px-4 py-2 text-sm",
