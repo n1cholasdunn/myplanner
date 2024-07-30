@@ -16,3 +16,9 @@ export interface Task extends TaskInput {
   user_id: number;
   order: number;
 }
+
+export type CategorizedTasks = {
+  firstDayTasks: Task[];
+  secondDayTasks: Task[];
+  thirdDayTasks: Task[];
+};

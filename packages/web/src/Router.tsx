@@ -53,8 +53,8 @@ const AppRouter = () => {
         <Route path="*" element={<NotFound />} />
         <Route path="/user-info" element={<User />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/3-day-view" element={<ThreeDayView />} />
-        <Route path="/week-view" element={<WeekView />} />
+        <Route path="/view/3-day" element={<ThreeDayView />} />
+        <Route path="/view/week" element={<WeekView />} />
       </Routes>
     </Router>
   );

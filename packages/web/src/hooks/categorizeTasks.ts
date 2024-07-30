@@ -1,11 +1,5 @@
 import dayjs, { Dayjs } from "dayjs";
-import { Task } from "../types/tasks";
-
-type CategorizedTasks = {
-  firstDayTasks: Task[];
-  secondDayTasks: Task[];
-  thirdDayTasks: Task[];
-};
+import { CategorizedTasks, Task } from "../types/tasks";
 
 type UseCategorizeTasksReturn = {
   categorizeTasksByDay: (
@@ -19,9 +13,9 @@ export const useCategorizeTasks = (): UseCategorizeTasksReturn => {
     tasks: Task[] | undefined,
     selectedDate: Dayjs,
   ) => {
-    const firstDayTasks: Task[] = [];
-    const secondDayTasks: Task[] = [];
-    const thirdDayTasks: Task[] = [];
+    let firstDayTasks: Task[] = [];
+    let secondDayTasks: Task[] = [];
+    let thirdDayTasks: Task[] = [];
 
     tasks?.forEach((task) => {
       const taskDate = dayjs(task.dueDate);
@@ -35,6 +29,9 @@ export const useCategorizeTasks = (): UseCategorizeTasksReturn => {
         thirdDayTasks.push(task);
       }
     });
+    firstDayTasks = firstDayTasks.sort((a, b) => a.order - b.order);
+    secondDayTasks = secondDayTasks.sort((a, b) => a.order - b.order);
+    thirdDayTasks = thirdDayTasks.sort((a, b) => a.order - b.order);
 
     return { firstDayTasks, secondDayTasks, thirdDayTasks };
   };
