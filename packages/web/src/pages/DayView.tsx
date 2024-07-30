@@ -19,13 +19,11 @@ const DayView: React.FC = () => {
   const [filteredTasks, setFilteredTasks] = useState<TaskType[]>([]);
 
   useEffect(() => {
-    console.log("selectedDate:", selectedDate);
-  }, [selectedDate]);
-
-  useEffect(() => {
     if (tasks) {
       setFilteredTasks(
-        tasks.filter((task) => dayjs(task.dueDate).isSame(selectedDate, "day")),
+        tasks
+          .filter((task) => dayjs(task.dueDate).isSame(selectedDate, "day"))
+          .sort((a, b) => a.order - b.order),
       );
     }
   }, [tasks, selectedDate]);

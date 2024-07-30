@@ -10,7 +10,7 @@ import ViewMenu from "../components/ViewMenu";
 import { useTasks } from "../hooks/useTasks";
 import dayjs, { Dayjs } from "dayjs";
 import { getWeekDays } from "../utils/calendar";
-import { Category, Priority } from "../types/tasks";
+import { Category, Priority, Task } from "../types/tasks";
 import { classNames } from "../utils/classNames";
 import Avatar from "../components/Avatar";
 import WeekTaskList from "../components/WeekTaskList";
@@ -21,19 +21,25 @@ const WeekView: React.FC = () => {
   const container = useRef<HTMLDivElement | null>(null);
   const containerNav = useRef<HTMLDivElement | null>(null);
 
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+
   const { tasks, addTask } = useTasks();
 
-  const filteredTasks = tasks?.filter((task) => {
-    const taskDate = dayjs(task.dueDate);
-    const startDate = selectedDate.startOf("week");
-    const endDate = selectedDate.endOf("week");
-    return (
-      taskDate.isSame(startDate, "day") ||
-      (taskDate.isAfter(startDate) && taskDate.isBefore(endDate)) ||
-      taskDate.isSame(endDate, "day")
-    );
-  });
   useEffect(() => {
+    if (tasks) {
+      setFilteredTasks(
+        tasks.filter((task) => {
+          const taskDate = dayjs(task.dueDate);
+          const startDate = selectedDate.startOf("week");
+          const endDate = selectedDate.endOf("week");
+          return (
+            taskDate.isSame(startDate, "day") ||
+            (taskDate.isAfter(startDate) && taskDate.isBefore(endDate)) ||
+            taskDate.isSame(endDate, "day")
+          );
+        }),
+      );
+    }
     console.log("filteredTasks week", filteredTasks);
   }, [filteredTasks]);
 

@@ -35,21 +35,19 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, setFilteredTasks }) => {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (over && active.id !== over.id) {
-      setFilteredTasks((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
-        const updatedTasks = arrayMove(items, oldIndex, newIndex).map(
-          (task, index) => ({
-            ...task,
-            order: index + 1,
-          }),
-        );
+    if (over && active.id !== over.id && tasks) {
+      const oldIndex = tasks.findIndex((item) => item.id === active.id);
+      const newIndex = tasks.findIndex((item) => item.id === over.id);
+      const updatedTasks = arrayMove(tasks, oldIndex, newIndex).map(
+        (task, index) => ({
+          ...task,
+          order: index + 1,
+        }),
+      );
 
-        updateTaskOrder(updatedTasks);
+      setFilteredTasks(updatedTasks);
 
-        return updatedTasks;
-      });
+      updateTaskOrder(updatedTasks);
     }
   };
   return (
@@ -63,7 +61,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, setFilteredTasks }) => {
         >
           <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
             {tasks.map((task) => (
-              <div key={task.id} className="flex-none">
+              <div key={task.order} className="flex-none">
                 <TaskBox {...task} />
               </div>
             ))}

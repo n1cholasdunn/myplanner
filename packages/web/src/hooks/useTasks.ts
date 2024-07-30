@@ -139,7 +139,28 @@ export const useTasks = () => {
 
   const updateTaskOrderMutation = useMutation({
     mutationFn: updateTaskOrder,
-    onSuccess: () => {
+    onMutate: async (updatedTasks: Task[]) => {
+      await queryClient.cancelQueries({ queryKey: ["tasks"] });
+
+      const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);
+
+      queryClient.setQueryData<Task[]>(["tasks"], (old) =>
+        old
+          ? old.map(
+              (task) =>
+                updatedTasks.find((updated) => updated.id === task.id) || task,
+            )
+          : [],
+      );
+
+      return { previousTasks };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousTasks) {
+        queryClient.setQueryData(["tasks"], context.previousTasks);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
